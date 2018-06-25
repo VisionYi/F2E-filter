@@ -1,0 +1,40 @@
+@import '_reset-ress';
+
+/* 以下為加入更細的 CSS 初始化設定，包含修改其他框架的不良設計 */
+img {
+  vertical-align: middle;
+}
+
+table {
+  border-collapse: collapse; // Prevent double borders
+}
+
+address {
+  font-style: normal;
+}
+
+ol, ul, dl {
+  list-style: none;
+}
+
+// 修改 ress.css 的設計不良
+select {
+  -moz-appearance: menulist;
+  -webkit-appearance: menulist;
+}
+
+/* ====================== 以下為正式內容 ====================== */
+
+body {
+  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: $font-size;
+  color: $color-text;
+  line-height: 1.5;
+  background-color: $color-bg;
+  text-align: left;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+}

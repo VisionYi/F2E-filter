@@ -1,0 +1,53 @@
+/**
+ * 增加元素或元件的附加屬性，例: 背景大小、間距、位置型態之類的，CSS class 多為單一屬性內容
+ */
+
+@each $size, $value in $spacing-map {
+  .mr-#{$size} {
+    margin-right: $value !important;
+  }
+  .mb-#{$size} {
+    margin-bottom: $value !important;
+  }
+}
+
+.ml-auto {
+  margin-left: auto !important;
+}
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.d-f {
+  display: flex !important;
+}
+.d-f-center {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.d-f-center-h {
+  display: flex !important;
+  align-items: center;
+}
+.d-f-center-w {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+}
+.d-n {
+  display: none !important;
+}
+
+@each $name, $color in $color-map {
+  .#{$name} {
+    background-color: $color !important;
+  }
+  .#{$name}--text {
+    color: $color !important;
+  }
+  .#{$name}--border {
+    border-color: $color !important;
+  }
+}

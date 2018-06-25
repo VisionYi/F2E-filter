@@ -1,0 +1,22 @@
+// RWD 響應式設計，在某斷點範圍內改變內容
+@mixin respond-to($point-key, $areas: $breakpoint-areas) {
+  @if map-has-key($areas, $point-key) {
+    @media #{map-get($areas, $point-key)} {
+      @content;
+    }
+  }
+  @else {
+    @warn "#{$point-key} doesn't exist in the map.";
+  }
+}
+
+// 外部自行修改 font-size，若要移動位置使用 position: relative; + top, bottom, left, right
+@mixin font-awesome-icon ($text: '') {
+  content: $text;
+  font-family: Font Awesome\ 5 Free;
+  font-weight: 900;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}

@@ -1,18 +1,17 @@
 <template>
-  <div id="app">
-    <navbar></navbar>
-    <main>
-      <router-view/>
-    </main>
+  <div class="navbar">
+    Navbar
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'Navbar',
 };
 </script>
 
 <style lang="scss">
-
+.navbar {
+  background-color: $color-primary;
+}
 </style>
