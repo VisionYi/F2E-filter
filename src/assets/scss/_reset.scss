@@ -23,10 +23,23 @@ select {
   -webkit-appearance: menulist;
 }
 
+/* 以下為修改 Vuetify 預設的初始化內容 */
+html {
+  font-size: initial;
+}
+.application {
+  font-family: inherit;
+  line-height: inherit;
+  &.theme--light {
+    background: inherit;
+    color: inherit;
+  }
+}
+
 /* ====================== 以下為正式內容 ====================== */
 
 body {
-  font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: $font-size;
   color: $color-text;
   line-height: 1.5;
