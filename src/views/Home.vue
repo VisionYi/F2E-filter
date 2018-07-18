@@ -61,8 +61,8 @@
                   </div>
                   <div class="col flexible">
                     <div class="card__content">
-                      <h2 class="text-l secondary--text mb-m">中都愛河濕地公園</h2>
-                      <p class="card__text mb-m">串起高雄城市生態綠廊的中都愛河濕地公園座落於愛河南側的十全與九如路之間，全長約2.5公里，佔地達七千餘平方公尺。為了打造與市民生活融合的「水岸花香的永續生態城市」，愛河濕地公園以生態工法構築邊坡，重現早期溼地豐富生態棲息環境。</p>
+                      <h2 class="text-l primary--text mb-b">中都愛河濕地公園</h2>
+                      <p class="card__text mb-b">串起高雄城市生態綠廊的中都愛河濕地公園座落於愛河南側的十全與九如路之間，全長約2.5公里，佔地達七千餘平方公尺。為了打造與市民生活融合的「水岸花香的永續生態城市」，愛河濕地公園以生態工法構築邊坡，重現早期溼地豐富生態棲息環境。</p>
                       <div class="mb-s d-f-center-height">
                         <span class="text-s text--light mr-m">
                           <v-icon class="mr-s">fas fa-map-marker-alt</v-icon>三民區
@@ -125,7 +125,7 @@ export default {
   }
 
   &__content {
-    margin: $spacing-l $spacing-xl;
+    margin: $spacing-l $spacing-xl 0 $spacing-xl;
   }
 
   &__tags {

@@ -14,11 +14,7 @@
 .filter {
   width: 100%;
   background-color: $color-bg-dark;
-
-  @include respond-to('mobile') {
-    box-shadow:
-      0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  }
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 
   &__item {
     padding: $spacing-l $spacing-xl;

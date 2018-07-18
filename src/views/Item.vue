@@ -61,7 +61,7 @@ export default {
   &__breadcrumbs-wrapper {
     display: flex;
     align-items: center;
-    height: 40px;
+    height: 2.5rem;
     background-color: $color-bg-dark;
 
     .v-breadcrumbs {

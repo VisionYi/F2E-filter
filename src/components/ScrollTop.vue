@@ -36,7 +36,7 @@ export default {
       const c = document.documentElement.scrollTop || document.body.scrollTop;
       if (c > 0) {
         window.requestAnimationFrame(this.scrollToTop);
-        window.scrollTo(0, c - (c / 7));
+        window.scrollTo(0, c - (c / 6));
       }
     },
   },
@@ -52,7 +52,7 @@ export default {
     width: 3rem;
     font-size: 20px;
 
-    @include respond-to('mobile') {
+    @include respond-to('tablet-down') {
       height: 2.5rem;
       width: 2.5rem;
       font-size: 18px;
