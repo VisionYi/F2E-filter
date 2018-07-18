@@ -1,3 +1,196 @@
 /**
  * elements & structure (layout) 單一元素或結構外框之類的，專案變大時，以資料夾分出多個檔案
  */
+
+.container-fluid {
+  padding: 0;
+  max-width: 1240px;
+
+  @include respond-to('desktop') {
+    padding: 0 $spacing-xl;
+  }
+}
+
+.filter {
+  width: 100%;
+  background-color: $color-bg-dark;
+
+  @include respond-to('mobile') {
+    box-shadow:
+      0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+
+  &__item {
+    padding: $spacing-l $spacing-xl;
+    padding-bottom: $spacing-l + 0.25rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $color-bg-darker;
+    }
+
+    &__title {
+      margin-bottom: $spacing;
+      font-size: $font-size-m;
+      line-height: $line-height-m;
+      pointer-events: none;
+    }
+
+    @include respond-to('mobile') {
+      padding: 0;
+
+      &__title {
+        position: relative;
+        margin-bottom: 0;
+        padding: $spacing $spacing-xl;
+        cursor: pointer;
+        pointer-events: initial;
+
+        &::after {
+          @include font-awesome-icon('\f078');
+          position: absolute;
+          top: $spacing;
+          right: $spacing-xl;
+          color: $color-text-light;
+          transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+        }
+
+        &.is-expanded::after {
+          transform: rotate(180deg);
+        }
+
+        &:focus,
+        &:hover {
+          background-color: rgba($color: #fff, $alpha: 0.2);
+        }
+      }
+
+      &__content {
+        padding: $spacing-s $spacing-xl $spacing-l $spacing-xl;
+      }
+    }
+  }
+
+  .v-input--selection-controls {
+    margin: 0;
+
+    .v-icon {
+      font-size: 20px;
+    }
+    .v-label {
+      color: inherit;
+    }
+    &__input {
+      width: auto;
+    }
+    &__ripple {
+      left: calc(50% - 24px);
+    }
+  }
+}
+
+.card {
+  background-color: #fff;
+
+  &--pointer {
+    cursor: pointer;
+    box-shadow:
+      0 2px 1px -1px rgba(0,0,0,.2),
+      0 1px 1px 0 rgba(0,0,0,.14),
+      0 1px 3px 0 rgba(0,0,0,.12);
+
+    &:hover {
+      box-shadow:
+        0 2px 4px -1px rgba(0,0,0,.2),
+        0 4px 5px 0 rgba(0,0,0,.14),
+        0 1px 10px 0 rgba(0,0,0,.12);
+    }
+  }
+
+  &__figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    width: 100%;
+
+    img {
+      position: absolute;
+      height: auto;
+      width: 100%;
+    }
+
+    &::before {
+      content: '';
+      padding-top: 56.25%; // 16:9 比例
+      float: left;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    &--desktop-height {
+      @include respond-to('desktop') {
+        height: 100%;
+        width: 220px;
+
+        img {
+          position: absolute;
+          height: 100%;
+          width: auto;
+        }
+
+        &::before {
+          content: normal;
+        }
+      }
+    }
+  }
+
+  &__content {
+    padding: $spacing-l $spacing-m;
+
+    .v-chip {
+      background-color: $color-bg-darker;
+      font-size: $font-size-s;
+      color: $color-text;
+    }
+
+    .v-icon {
+      min-width: $font-size-s;
+    }
+  }
+
+  &__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    &--one {
+      -webkit-line-clamp: 1;
+    }
+  }
+
+  &__link-item {
+    color: inherit;
+  }
+}
+
+.expansion {
+  display: none;
+  &--mobile {
+    @include respond-to('tablet-up') {
+      display: block;
+    }
+  }
+
+  &.is-active {
+    display: block;
+  }
+}

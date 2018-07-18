@@ -19,23 +19,42 @@
   margin-right: auto !important;
 }
 
+@each $size, $value in $font-size-map {
+  .text-#{$size} {
+    font-size: $value !important;
+    line-height: map-get($line-height-map, $size) !important;
+  }
+}
+
+.text--bold {
+  font-weight: bold !important;
+}
+.text--italic {
+  font-style: italic !important;
+}
+.text--light {
+  color: $color-text-light !important;
+}
+
 .d-f {
   display: flex !important;
+  flex-wrap: wrap;
 }
 .d-f-center {
   display: flex !important;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
-.d-f-center-h {
+.d-f-center-height {
   display: flex !important;
   align-items: center;
+  height: 100%;
 }
-.d-f-center-w {
+.d-f-center-width {
   display: flex !important;
   flex-direction: column;
   align-items: center;
-}
-.d-n {
-  display: none !important;
+  width: 100%;
 }

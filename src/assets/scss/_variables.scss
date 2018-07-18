@@ -1,22 +1,13 @@
 $font-size: 1rem; // 16px
+$font-size-s: 0.875rem; // 14px
 $font-size-m: 1.25rem; // 20px
 $font-size-l: 1.5rem; // 24px
-$font-size-xl: 2.25rem; // 36px
+$font-size-xl: 2rem; // 32px
 
-$line-height-b: 1.2rem; // 19px
+$line-height-s: 1.2rem; // 19px
 $line-height-m: 1.5rem; // 24px
 $line-height-l: 1.75rem; // 28px
-$line-height-xl: 2.75rem; // 44px
-
-$color-text: #000;
-$color-text-light: #9B9B9B;
-
-$color-primary: #00BCD4;
-$color-secondary: #4DD0E1;
-
-$color-bg: #F2F6FC;
-
-$color-line: #D7D7D7;
+$line-height-xl: 2.375rem; // 38px
 
 $spacing: 1rem; // 16px
 $spacing-s: 0.5rem; // 8px
@@ -24,6 +15,20 @@ $spacing-m: 1.25rem; // 20px
 $spacing-l: 1.5rem; // 24px
 $spacing-xl: 2.5rem; // 40px
 
+$font-size-map: (
+  's': $font-size-s,
+  'b': $font-size,
+  'm': $font-size-m,
+  'l': $font-size-l,
+  'xl': $font-size-xl,
+);
+$line-height-map: (
+  's': $line-height-s,
+  'b': 1.5,
+  'm': $line-height-m,
+  'l': $line-height-l,
+  'xl': $line-height-xl,
+);
 $spacing-map: (
   'b': $spacing,
   's': $spacing-s,
@@ -32,11 +37,24 @@ $spacing-map: (
   'xl': $spacing-xl,
 );
 
+$color-text: #333;
+$color-text-light: #9B9B9B;
+
+$color-primary: #00BCD4;
+$color-secondary: #4DD0E1;
+
+$color-bg: #F2F6FC;
+$color-bg-dark: #EBEBEB;
+$color-bg-darker: #D7D7D7;
+
+$color-line: #D7D7D7;
+
 // media query 斷點範圍
 $breakpoint-areas: (
+  large: '(min-width: 1240px)',
   desktop: '(min-width: 992px)',
   tablet-up: '(min-width: 768px)',
-  tablet: '(max-width: 991.99px) and (min-width: 768px)',
-  tablet-down: '(max-width: 991.99px)',
-  mobile: '(max-width: 767.99px)',
+  tablet: '(max-width: 991.98px) and (min-width: 768px)',
+  tablet-down: '(max-width: 991.98px)',
+  mobile: '(max-width: 767.98px)',
 );

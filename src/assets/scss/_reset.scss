@@ -27,19 +27,38 @@ select {
 html {
   font-size: initial;
 }
+ol, ul {
+  padding-left: 0;
+}
+p {
+  margin-bottom: 0;
+}
 .application {
   font-family: inherit;
   line-height: inherit;
+
   &.theme--light {
     background: inherit;
     color: inherit;
+  }
+  .v-btn {
+    margin: 0;
+    font-size: inherit;
+    text-transform: initial;
+  }
+  .v-chip {
+    margin: 0;
+  }
+  .v-icon {
+    font-size: inherit;  // 搭配 fontawesome icon 使用，比例隨著文字大小變化
+    vertical-align: initial;
   }
 }
 
 /* ====================== 以下為正式內容 ====================== */
 
 body {
-  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', 'Microsoft JhengHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: $font-size;
   color: $color-text;
   line-height: 1.5;
@@ -50,4 +69,14 @@ body {
 a {
   color: $color-primary;
   text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+input,
+select,
+textarea {
+  color: $color-text;
 }

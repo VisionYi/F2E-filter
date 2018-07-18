@@ -1,8 +1,9 @@
 <template>
   <v-app id="app">
-    <navbar></navbar>
+    <the-navbar></the-navbar>
     <main>
       <router-view/>
+      <c-scroll-top></c-scroll-top>
     </main>
   </v-app>
 </template>
@@ -14,5 +15,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+main {
+  position: relative;
+}
 </style>
