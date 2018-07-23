@@ -47,11 +47,11 @@
           top: $spacing;
           right: $spacing-xl;
           color: $color-text-light;
-          transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
         }
 
         &.is-expanded::after {
-          transform: rotate(180deg);
+          transform: rotate(-180deg);
         }
 
         &:focus,
@@ -180,6 +180,8 @@
 
 .expansion {
   display: none;
+  transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
   &--mobile {
     @include respond-to('tablet-up') {
       display: block;
@@ -189,4 +191,20 @@
   &.is-active {
     display: block;
   }
+}
+
+// vue transform 動畫操作
+.zoom-enter-active, .zoom-leave-active {
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+.zoom-enter, .zoom-leave-to {
+  transform: scale(0) rotate(-60deg);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.4s cubic-bezier(0.5, 0.05, 0.675, 0.2);
+}
+.fade-enter, .fade-leave-to {
+  transform: translateY(5px);
+  opacity: 0;
 }

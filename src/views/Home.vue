@@ -1,43 +1,53 @@
 <template>
-  <!-- eslint-disable -->
   <div class="main container-fluid mb-m">
+    {{ loading ? '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' : ''}}
     <div class="grid no-gap mobile-1">
       <div class="col-auto">
         <aside class="filter">
-          <div class="filter__item">
-            <h3 class="filter__item__title is-expanded">地區</h3>
-            <div class="expansion expansion--mobile is-active">
+          <div
+            v-for="selector in selectors"
+            :key="selector.id"
+            class="filter__item"
+          >
+            <h3
+              class="filter__item__title"
+              :class="{'is-expanded': filterType === `s-${selector.id}`}"
+              @click="selectFilterType(`s-${selector.id}`)"
+            >
+              {{ selector.typeName }}
+            </h3>
+            <div class="expansion expansion--mobile" v-slide-toggle="filterType === `s-${selector.id}`">
               <div class="filter__item__content">
                 <v-select
-                  :items="['全部', '三民區', '鳳山區', '仁武區']"
-                  value="全部"
+                  :items="selector.items"
+                  :value="selector.value"
                   solo
                   flat
                   hide-details
+                  @input="updateSelector({id: selector.id, value: $event})"
                 ></v-select>
               </div>
             </div>
           </div>
           <div class="filter__item">
-            <h3 class="filter__item__title">類別</h3>
-            <div class="expansion expansion--mobile">
+            <h3
+              class="filter__item__title"
+              :class="{'is-expanded': filterType === 'checkbox'}"
+              @click="selectFilterType('checkbox')"
+            >
+              進階篩選
+            </h3>
+            <div class="expansion expansion--mobile" v-slide-toggle="filterType === 'checkbox'">
               <div class="filter__item__content">
-                <v-select
-                  :items="['全部', '文化類', '古蹟類', '美食類']"
-                  value="全部"
-                  solo
-                  flat
+                <v-checkbox
+                  v-for="(name, index) in checkboxItems"
+                  :key="index"
+                  v-model="$_checkboxValue"
+                  :label="name"
+                  :value="name"
+                  color="primary"
                   hide-details
-                ></v-select>
-              </div>
-            </div>
-          </div>
-          <div class="filter__item">
-            <h3 class="filter__item__title">進階篩選</h3>
-            <div class="expansion expansion--mobile">
-              <div class="filter__item__content">
-                <v-checkbox label="免費參觀" value="free" color="primary" hide-details></v-checkbox>
-                <v-checkbox label="全天候開放" value="open" color="primary" hide-details></v-checkbox>
+                ></v-checkbox>
               </div>
             </div>
           </div>
@@ -45,35 +55,68 @@
       </div>
       <div class="col flexible">
         <div class="main__content">
-          <p class="text-l mb-s">共 <strong class="primary--text">200</strong> 筆搜尋結果 ...</p>
+          <p class="text-l mb-s">
+            共 <strong class="primary--text">{{ listTotal }}</strong> 筆搜尋結果...
+          </p>
           <div class="main__tags mb-m">
-            <v-chip close outline color="primary">三民區</v-chip>
-            <v-chip close outline color="primary">免費</v-chip>
+            <v-chip
+              v-if="search"
+              color="primary"
+              close
+              outline
+              @input="closeTagSearch()"
+            >
+              {{ search }}
+            </v-chip>
+            <v-chip
+              v-for="item in tagSelectors"
+              :key="`s-${item.id}`"
+              color="primary"
+              close
+              outline
+              @input="closeTagSelector(item.id)"
+            >
+              {{ item.value }}
+            </v-chip>
+            <v-chip
+              v-for="(name, index) in checkboxValue"
+              :key="`c-${index}`"
+              color="primary"
+              close
+              outline
+              @input="closeTagCheckbox(name)"
+            >
+              {{ name }}
+            </v-chip>
           </div>
           <ul class="main__cards mb-m">
-            <li class="card card--pointer" v-for="n in 4" :key="n">
-              <router-link class="card__link-item" :to="{name: 'item'}">
+            <li
+               v-for="item in list"
+               :key="item.id"
+               class="card card--pointer"
+            >
+              <router-link class="card__link-item" :to="routerLinkItem(item.id)">
                 <div class="grid no-gap tablet-1 mobile-1">
                   <div class="col-auto">
                     <figure class="card__figure card__figure--desktop-height">
-                      <img src="https://khh.travel/FileArtPic.ashx?id=1846&w=1280&h=960" alt="picture">
+                      <img :src="item.picture" alt="picture">
                     </figure>
                   </div>
                   <div class="col flexible">
                     <div class="card__content">
-                      <h2 class="text-l primary--text mb-b">中都愛河濕地公園</h2>
-                      <p class="card__text mb-b">串起高雄城市生態綠廊的中都愛河濕地公園座落於愛河南側的十全與九如路之間，全長約2.5公里，佔地達七千餘平方公尺。為了打造與市民生活融合的「水岸花香的永續生態城市」，愛河濕地公園以生態工法構築邊坡，重現早期溼地豐富生態棲息環境。</p>
+                      <h2 class="text-l primary--text mb-b">{{ item.name }}</h2>
+                      <p class="card__text mb-b">{{ item.description }}</p>
                       <div class="mb-s d-f-center-height">
                         <span class="text-s text--light mr-m">
-                          <v-icon class="mr-s">fas fa-map-marker-alt</v-icon>三民區
+                          <v-icon class="mr-s">fas fa-map-marker-alt</v-icon>{{ item.zone }}
                         </span>
-                        <span class="text-s text--light mr-m">
-                          <v-icon class="mr-s">fas fa-ticket-alt</v-icon>免費參觀
+                        <span class="text-s text--light mr-m" v-if="item.ticketInfo !== ''">
+                          <v-icon class="mr-s">fas fa-ticket-alt</v-icon>{{ item.ticketInfo }}
                         </span>
-                        <v-chip small>文化類</v-chip>
+                        <v-chip small>{{ item.category }}</v-chip>
                       </div>
                       <span class="text-s text--light card__text card__text--one">
-                        <v-icon class="mr-s">far fa-clock</v-icon>週二至週日10:00-18:00，每週一公休
+                        <v-icon class="mr-s">far fa-clock</v-icon>{{ item.openTime }}
                       </span>
                     </div>
                   </div>
@@ -83,12 +126,14 @@
           </ul>
           <div class="grid align-space-between mobile-1">
             <div class="col-auto hidden-mobile">
-              <p class="d-f-center text--light">共27頁 | 目前第12頁 (10筆1頁)</p>
+              <p class="d-f-center text--light">
+                共 {{ pageTotal }} 頁 | 目前第 {{ pageCurrent }} 頁 ( 每頁 {{ numberPerPage }} 筆 )
+              </p>
             </div>
             <div class="col-auto">
               <v-pagination
-                v-model="page"
-                :length="8"
+                v-model="pageCurrent"
+                :length="pageTotal"
                 :total-visible="7"
               ></v-pagination>
             </div>
@@ -100,12 +145,81 @@
 </template>
 
 <script>
+import { slideToggle } from '@/shared/util';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
+
 export default {
   name: 'Home',
+  directives: {
+    // 使元素隨著 binding.value 資料而改變，可以自動擴展或折疊
+    slideToggle: {
+      update(el, binding) {
+        if (binding.value === binding.oldValue) return;
+        slideToggle(el, 'is-active');
+      },
+    },
+  },
   data() {
     return {
-      page: 2,
+      pageCurrent: 1,
+      numberPerPage: 10,
+      filterType: null,
     };
+  },
+
+  computed: {
+    ...mapGetters([
+      'list',
+      'search',
+      'selectors',
+      'tagSelectors',
+      'checkboxItems',
+      'checkboxValue',
+      'loading',
+    ]),
+
+    $_checkboxValue: {
+      get() {
+        return this.checkboxValue;
+      },
+      set(value) {
+        this.setCheckboxValue(value);
+      },
+    },
+
+    listTotal() {
+      return this.list.length;
+    },
+
+    // 以無條件進位法取得
+    pageTotal() {
+      const floatTotal = this.listTotal / this.numberPerPage;
+      if (floatTotal % 1) {
+        return floatTotal - (floatTotal % 1) + 1;
+      }
+      return floatTotal;
+    },
+
+    routerLinkItem() {
+      return id => ({ name: 'item', params: { id } });
+    },
+  },
+
+  methods: {
+    ...mapMutations([
+      'setCheckboxValue',
+      'updateSelector',
+    ]),
+    ...mapActions([
+      'closeTagSearch',
+      'closeTagSelector',
+      'closeTagCheckbox',
+    ]),
+
+    selectFilterType(n) {
+      // 開啟同一個編號就改成把編號改成 null 表示關閉
+      this.filterType = (this.filterType === n) ? null : n;
+    },
   },
 };
 </script>
@@ -183,6 +297,5 @@ export default {
     }
   }
 }
-
 
 </style>

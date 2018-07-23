@@ -9,6 +9,7 @@
         </li>
         <li v-if="$route.name === 'home'" class="col flexible hidden-mobile" >
           <v-text-field
+            v-model="$_search"
             label="search"
             placeholder="search..."
             color="white"
@@ -16,6 +17,7 @@
             single-line
             hide-details
             clearable
+            @click:clear="setSearch('')"
           ></v-text-field>
         </li>
       </ul>
@@ -24,8 +26,31 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
+import { debounce } from '@/shared/util';
+
 export default {
   name: 'Navbar',
+
+  computed: {
+    ...mapGetters([
+      'search',
+    ]),
+
+    $_search: {
+      get() {
+        return this.search;
+      },
+      set: debounce(function fn(value) {
+        this.setSearch(value);
+      }, 400),
+    },
+  },
+  methods: {
+    ...mapMutations([
+      'setSearch',
+    ]),
+  },
 };
 </script>
 
