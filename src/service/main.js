@@ -6,7 +6,7 @@ export default {
       params: {
         resource_id: '92290ee5-6e61-456f-80c0-249eae2fcc97',
         sort: 'Zone, Class1, Name asc',
-        limit: '21',
+        limit: '500',
       },
     });
   },

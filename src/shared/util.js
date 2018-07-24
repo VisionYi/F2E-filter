@@ -14,6 +14,13 @@ export function scrollToTop() {
   }
 }
 
+// 可放入陣列或物件
+export function isEmpty(obj) {
+  if (obj === undefined || obj === null) return true;
+
+  return Object.keys(obj).length === 0;
+}
+
 /**
  * - 可擴展或可折疊，前提是指定元素的 transition 需要事先設定好，
  * - 元素本身 height 的值不能是 inherit 與 100%，必須是明確的數值或是 auto

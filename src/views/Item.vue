@@ -1,7 +1,7 @@
 <template>
   <div class="item-page">
     <transition appear name="fade">
-      <div class="item-page__wrapper">
+      <div>
         <div class="item-page__header mb-l">
           <div class="grid align-middle">
             <div class="col-auto">

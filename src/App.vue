@@ -5,7 +5,7 @@
       <router-view/>
       <c-scroll-top
         :startOffsetTop="500"
-        :stopBodyBottom="102"
+        :stopBodyBottom="80"
       ></c-scroll-top>
     </main>
   </v-app>

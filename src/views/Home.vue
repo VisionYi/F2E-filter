@@ -16,7 +16,10 @@
             >
               {{ selector.typeName }}
             </h3>
-            <div class="expansion expansion--mobile" v-slide-toggle="filterType === `s-${selector.id}`">
+            <div
+              v-watch-data="{fn: slideToggle, data: filterType === `s-${selector.id}`}"
+              class="expansion expansion--mobile"
+            >
               <div class="filter__item__content">
                 <v-select
                   :items="selector.items"
@@ -37,14 +40,17 @@
             >
               進階篩選
             </h3>
-            <div class="expansion expansion--mobile" v-slide-toggle="filterType === 'checkbox'">
+            <div
+              v-watch-data="{fn: slideToggle, data: filterType === 'checkbox'}"
+              class="expansion expansion--mobile"
+            >
               <div class="filter__item__content">
                 <v-checkbox
-                  v-for="(name, index) in checkboxItems"
-                  :key="index"
+                  v-for="(value, key) in checkboxItems"
+                  :key="key"
                   v-model="$_checkboxValue"
-                  :label="name"
-                  :value="name"
+                  :label="key"
+                  :value="key"
                   color="primary"
                   hide-details
                 ></v-checkbox>
@@ -56,7 +62,7 @@
       <div class="col flexible">
         <div class="main__content">
           <p class="text-l mb-s">
-            共 <strong class="primary--text">{{ listTotal }}</strong> 筆搜尋結果...
+            共 <strong class="primary--text">{{ filterListTotal }}</strong> 筆搜尋結果...
           </p>
           <div class="main__tags mb-m">
             <v-chip
@@ -91,7 +97,7 @@
           </div>
           <ul class="main__cards mb-m">
             <li
-               v-for="item in list"
+               v-for="item in pageFilterList"
                :key="item.id"
                class="card card--pointer"
             >
@@ -124,7 +130,7 @@
               </router-link>
             </li>
           </ul>
-          <div class="grid align-space-between mobile-1">
+          <div class="grid align-space-between mobile-1" v-if="filterListTotal !== 0">
             <div class="col-auto hidden-mobile">
               <p class="d-f-center text--light">
                 共 {{ pageTotal }} 頁 | 目前第 {{ pageCurrent }} 頁 ( 每頁 {{ numberPerPage }} 筆 )
@@ -135,6 +141,7 @@
                 v-model="pageCurrent"
                 :length="pageTotal"
                 :total-visible="7"
+                @input="handleChangePage()"
               ></v-pagination>
             </div>
           </div>
@@ -145,17 +152,23 @@
 </template>
 
 <script>
-import { slideToggle } from '@/shared/util';
+import { slideToggle, isEmpty, scrollToTop } from '@/shared/util';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'Home',
   directives: {
-    // 使元素隨著 binding.value 資料而改變，可以自動擴展或折疊
     slideToggle: {
       update(el, binding) {
         if (binding.value === binding.oldValue) return;
         slideToggle(el, 'is-active');
+      },
+    },
+    // 使元素隨著資料而改變，當改變後執行 binding.value.fn
+    watchData: {
+      update(el, binding) {
+        if (binding.value.data === binding.oldValue.data) return;
+        binding.value.fn(el, binding.value.data, binding.oldValue.data);
       },
     },
   },
@@ -187,13 +200,13 @@ export default {
       },
     },
 
-    listTotal() {
-      return this.list.length;
+    filterListTotal() {
+      return this.filterList.length;
     },
 
     // 以無條件進位法取得
     pageTotal() {
-      const floatTotal = this.listTotal / this.numberPerPage;
+      const floatTotal = this.filterListTotal / this.numberPerPage;
       if (floatTotal % 1) {
         return floatTotal - (floatTotal % 1) + 1;
       }
@@ -203,8 +216,47 @@ export default {
     routerLinkItem() {
       return id => ({ name: 'item', params: { id } });
     },
+
+    filterList() {
+      return this.list.filter((item) => {
+        if (this.search && !item.name.includes(this.search)) {
+          return false;
+        }
+
+        if (!isEmpty(this.tagSelectors) &&
+            !this.tagSelectors.every(selector => item[selector.type] === selector.value)
+        ) {
+          return false;
+        }
+
+        if (!isEmpty(this.checkboxValue) &&
+            !this.checkboxValue.every(name => item[this.checkboxItems[name]] === name)
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+    },
+
+    pageFilterList() {
+      const start = (this.pageCurrent - 1) * this.numberPerPage;
+      const end = start + this.numberPerPage;
+      return this.filterList.slice(start, end); // end 最後一個編號不會算進去
+    },
   },
 
+  watch: {
+    search() {
+      this.pageCurrent = 1;
+    },
+    tagSelectors() {
+      this.pageCurrent = 1;
+    },
+    checkboxValue() {
+      this.pageCurrent = 1;
+    },
+  },
   methods: {
     ...mapMutations([
       'setCheckboxValue',
@@ -219,6 +271,14 @@ export default {
     selectFilterType(n) {
       // 開啟同一個編號就改成把編號改成 null 表示關閉
       this.filterType = (this.filterType === n) ? null : n;
+    },
+
+    handleChangePage() {
+      scrollToTop();
+    },
+
+    slideToggle(el) {
+      slideToggle(el, 'is-active');
     },
   },
 };

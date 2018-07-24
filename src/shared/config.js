@@ -1,5 +1,5 @@
 export const BASE_URL = 'https://data.kcg.gov.tw/api/action/';
-export const TIMEOUT = 3000;
+export const TIMEOUT = 6000;
 
 export const CATEGORY = {
   1: '文化類',

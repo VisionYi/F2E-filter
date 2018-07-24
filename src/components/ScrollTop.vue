@@ -1,11 +1,11 @@
 <template>
-  <div class="scroll-top" :style="mainStyle" ref="scrollBtn">
+  <div class="scroll-top" :style="mainStyle" v-scroll.init="handleScroll">
     <transition name="zoom">
       <v-btn
         v-show="isShow"
         :color="color"
         fab
-        @click="onScrollToTop()"
+        @click="doScrollToTop()"
       >
         <v-icon>fas fa-angle-up</v-icon>
       </v-btn>
@@ -18,6 +18,24 @@ import { debounce, scrollToTop } from '@/shared/util';
 
 export default {
   name: 'ScrollTop',
+  directives: {
+    scroll: {
+      inserted(el, binding) {
+        // 在綁定監聽事件前事先執行一次，初始化使用
+        if (binding.modifiers.init) {
+          binding.value(el);
+        }
+
+        const handle = function handle() {
+          const isRemoveEvent = binding.value(el);
+          if (isRemoveEvent) {
+            window.removeEventListener('scroll', handle);
+          }
+        };
+        window.addEventListener('scroll', handle);
+      },
+    },
+  },
   props: {
     color: {
       type: String,
@@ -48,13 +66,13 @@ export default {
       btnHeight: 0,
       windowHeight: 0,
       bodyHeight: 0,
-      windowOffsetTop: 0,
+      windowScrollTop: 0,
     };
   },
 
   computed: {
     isShow() {
-      return this.windowOffsetTop >= this.startOffsetTop;
+      return this.windowScrollTop >= this.startOffsetTop;
     },
 
     btnFixedTop() {
@@ -69,13 +87,13 @@ export default {
         return this.stopOffsetTop;
       }
       if (this.stopBodyBottom) {
-        return this.bodyHeight - this.stopBodyBottom;
+        return this.bodyHeight - this.btnHeight - this.stopBodyBottom;
       }
       return null;
     },
 
     mainStyle() {
-      if (this.stopPoint && (this.btnFixedTop + this.windowOffsetTop) >= this.stopPoint) {
+      if (this.stopPoint && (this.btnFixedTop + this.windowScrollTop) >= this.stopPoint) {
         return {
           position: 'absolute',
           top: `${this.stopPoint}px`,
@@ -94,16 +112,7 @@ export default {
   },
 
   mounted() {
-    this.windowOffsetTop = window.pageYOffset || document.documentElement.scrollTop;
-    this.btnHeight = this.$refs.scrollBtn.offsetHeight;
     this.windowHeight = window.innerHeight;
-    this.bodyHeight = document.querySelector('body').offsetHeight;
-
-    window.addEventListener('scroll', () => {
-      this.windowOffsetTop = window.pageYOffset || document.documentElement.scrollTop;
-      this.btnHeight = this.$refs.scrollBtn.offsetHeight;
-      this.bodyHeight = document.querySelector('body').offsetHeight;
-    });
 
     window.addEventListener(
       'resize',
@@ -114,8 +123,14 @@ export default {
   },
 
   methods: {
-    onScrollToTop() {
+    doScrollToTop() {
       scrollToTop();
+    },
+
+    handleScroll(el) {
+      this.windowScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      this.btnHeight = el.offsetHeight;
+      this.bodyHeight = document.querySelector('body').offsetHeight;
     },
   },
 };

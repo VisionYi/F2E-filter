@@ -11,7 +11,10 @@ export default new Vuex.Store({
     search: '',
     selectors: [],
     checkbox: {
-      items: ['免費參觀', '全天候開放'],
+      items: {
+        免費參觀: 'ticketInfo',
+        全天候開放: 'openTime',
+      },
       value: [],
     },
     loading: false,
@@ -20,10 +23,10 @@ export default new Vuex.Store({
     list: state => state.list,
     loading: state => state.loading,
     search: state => state.search,
-    selectors: state => [...state.selectors],
+    selectors: state => state.selectors,
     tagSelectors: state => state.selectors.filter(item => item.value !== '全部'),
-    checkboxItems: state => [...state.checkbox.items],
-    checkboxValue: state => [...state.checkbox.value],
+    checkboxItems: state => state.checkbox.items,
+    checkboxValue: state => state.checkbox.value,
     getListItemById: state => id => state.list.find(item => item.id === id),
 
     getSelectorItems: state => (property, firstItem = '') => {
@@ -66,12 +69,14 @@ export default new Vuex.Store({
       commit('setSelectors', [
         {
           id: 1,
+          type: 'zone',
           typeName: '地區',
           value: '全部',
           items: getters.getSelectorItems('zone', '全部'),
         },
         {
           id: 2,
+          type: 'category',
           typeName: '類別',
           value: '全部',
           items: getters.getSelectorItems('category', '全部'),
