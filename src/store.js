@@ -9,7 +9,22 @@ export default new Vuex.Store({
   state: {
     list: [],
     search: '',
-    selectors: [],
+    selectors: [
+      {
+        id: 1,
+        type: 'zone',
+        typeName: '地區',
+        value: '全部',
+        items: [],
+      },
+      {
+        id: 2,
+        type: 'category',
+        typeName: '類別',
+        value: '全部',
+        items: [],
+      },
+    ],
     checkbox: {
       items: {
         免費參觀: 'ticketInfo',
@@ -18,10 +33,12 @@ export default new Vuex.Store({
       value: [],
     },
     loading: false,
+    pageCurrent: 1,
   },
   getters: {
     list: state => state.list,
     loading: state => state.loading,
+    pageCurrent: state => state.pageCurrent,
     search: state => state.search,
     selectors: state => state.selectors,
     tagSelectors: state => state.selectors.filter(item => item.value !== '全部'),
@@ -29,7 +46,7 @@ export default new Vuex.Store({
     checkboxValue: state => state.checkbox.value,
     getListItemById: state => id => state.list.find(item => item.id === id),
 
-    getSelectorItems: state => (property, firstItem = '') => {
+    getSelectorItems: state => (property, oderByItems, firstItem = '') => {
       const objNumberPerItem = state.list.reduce(
         (obj, item) => {
           if (item[property] in obj) {
@@ -41,7 +58,9 @@ export default new Vuex.Store({
         },
         {},
       );
-      const items = Object.keys(objNumberPerItem);
+
+      let items = Object.keys(objNumberPerItem);
+      if (oderByItems) items = oderByItems.filter(name => items.includes(name));
       if (firstItem !== '') items.unshift(firstItem);
 
       return items;
@@ -50,11 +69,11 @@ export default new Vuex.Store({
   actions: {
     async initialData({ commit, getters }) {
       commit('setLoading', true);
-      const data = (await serviceMain.getAllData()).result.records;
 
+      const data = (await serviceMain.getAllData()).result.records;
       const list = data.map(item => ({
         id: item.Id,
-        name: item.Name,
+        name: item.Name.replace('?', ''),
         openTime: item.Opentime,
         description: item.Description, // 64
         picture: item.Picture1.replace('http', 'https'),
@@ -66,22 +85,14 @@ export default new Vuex.Store({
       }));
 
       commit('setList', list);
-      commit('setSelectors', [
-        {
-          id: 1,
-          type: 'zone',
-          typeName: '地區',
-          value: '全部',
-          items: getters.getSelectorItems('zone', '全部'),
-        },
-        {
-          id: 2,
-          type: 'category',
-          typeName: '類別',
-          value: '全部',
-          items: getters.getSelectorItems('category', '全部'),
-        },
-      ]);
+      commit('updateSelector', {
+        id: 1,
+        items: getters.getSelectorItems('zone', null, '全部'),
+      });
+      commit('updateSelector', {
+        id: 2,
+        items: getters.getSelectorItems('category', Object.values(CATEGORY), '全部'),
+      });
 
       commit('setLoading', false);
     },
@@ -116,6 +127,9 @@ export default new Vuex.Store({
     },
     setLoading(state, value) {
       state.loading = value;
+    },
+    setPageCurrent(state, value) {
+      state.pageCurrent = value;
     },
     updateSelector(state, { id, ...data }) {
       const index = state.selectors.findIndex(item => item.id === id);

@@ -1,45 +1,45 @@
 <template>
   <div class="item-page">
-    <transition appear name="fade">
-      <div>
-        <div class="item-page__header mb-l">
-          <div class="grid align-middle">
-            <div class="col-auto">
-              <v-btn color="primary" depressed @click="backHistory()">回上一頁</v-btn>
-            </div>
-            <div class="col flexible">
-              <div class="item-page__breadcrumbs-wrapper">
-                <v-breadcrumbs divider="/">
-                  <v-breadcrumbs-item href="#/">首頁</v-breadcrumbs-item>
-                  <v-breadcrumbs-item disabled>{{ item.name }}</v-breadcrumbs-item>
-                </v-breadcrumbs>
-              </div>
-            </div>
-          </div>
+    <div class="item-page__header mb-l">
+      <div class="grid align-middle">
+        <div class="col-auto">
+          <v-btn color="primary" depressed @click="backHistory()">回上一頁</v-btn>
         </div>
-        <div class="card elevation-1">
-          <figure class="card__figure">
-            <img :src="item.picture" alt="picture">
-          </figure>
-          <div class="card__content">
-            <h1 class="text-xl primary--text mb-b">{{ item.name }}</h1>
-            <div class="text-s text--light mb-b">
-              <v-icon class="mr-s">far fa-clock</v-icon>{{ item.openTime }}
-            </div>
-            <div class="text-s text--light mb-l">
-              <v-icon class="mr-s">fas fa-map-marker-alt</v-icon>{{ item.address }}
-            </div>
-            <p>{{ item.description }}</p>
+        <div class="col flexible">
+          <div class="item-page__breadcrumbs-wrapper">
+            <v-breadcrumbs divider="/">
+              <v-breadcrumbs-item href="#/">首頁</v-breadcrumbs-item>
+              <v-breadcrumbs-item disabled>{{ item.name }}</v-breadcrumbs-item>
+            </v-breadcrumbs>
           </div>
         </div>
       </div>
-    </transition>
+    </div>
+    <div class="card elevation-1">
+      <figure class="card__figure">
+        <img :src="item.picture" alt="picture">
+      </figure>
+      <div class="card__content">
+        <h1 class="text-xl primary--text mb-b">{{ item.name }}</h1>
+        <div class="text-s text--light mb-b">
+          <span class="mr-m">
+            <v-icon class="mr-s" title="開放時間">far fa-clock</v-icon>{{ item.openTime }}
+          </span>
+          <span class="mr-m" v-if="item.ticketInfo !== ''">
+            <v-icon class="mr-s" title="購票資訊">fas fa-ticket-alt</v-icon>{{ item.ticketInfo }}
+          </span>
+        </div>
+        <div class="text-s text--light mb-l">
+          <v-icon class="mr-s" title="地址">fas fa-map-marker-alt</v-icon>{{ item.address }}
+        </div>
+        <p>{{ item.description }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import serviceMain from '@/service/main';
 import { scrollToTop } from '@/shared/util';
 
 export default {
@@ -55,27 +55,11 @@ export default {
     ]),
   },
   mounted() {
-    const storeData = this.getListItemById(this.$route.params.id);
-    if (!storeData) {
-      this.initialItem(this.$route.params.id);
-    } else {
-      this.item = storeData;
-    }
-
+    this.item = this.getListItemById(this.$route.params.id);
     scrollToTop();
   },
 
   methods: {
-    async initialItem(id) {
-      const data = (await serviceMain.getItem(id)).result.records[0];
-      this.item = {
-        name: data.Name,
-        picture: data.Picture1.replace('http', 'https'),
-        openTime: data.Opentime,
-        address: data.Add,
-        description: data.Description,
-      };
-    },
     backHistory() {
       window.history.go(-1);
     },

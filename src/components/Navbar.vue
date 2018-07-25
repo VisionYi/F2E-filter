@@ -56,7 +56,7 @@ export default {
 
 <style lang="scss">
 .navbar {
-  height: 5rem;
+  height: 4rem;
   background-color: $color-primary;
 
   &__container {

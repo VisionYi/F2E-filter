@@ -1,6 +1,5 @@
 <template>
   <div class="main container-fluid mb-m">
-    {{ loading ? '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' : ''}}
     <div class="grid no-gap mobile-1">
       <div class="col-auto">
         <aside class="filter">
@@ -59,7 +58,7 @@
           </div>
         </aside>
       </div>
-      <div class="col flexible">
+      <div class="col flexible" id="content">
         <div class="main__content">
           <p class="text-l mb-s">
             共 <strong class="primary--text">{{ filterListTotal }}</strong> 筆搜尋結果...
@@ -95,7 +94,7 @@
               {{ name }}
             </v-chip>
           </div>
-          <ul class="main__cards mb-m">
+          <ul class="main__cards mb-m" v-if="filterListTotal !== 0">
             <li
                v-for="item in pageFilterList"
                :key="item.id"
@@ -112,18 +111,18 @@
                     <div class="card__content">
                       <h2 class="text-l primary--text mb-b">{{ item.name }}</h2>
                       <p class="card__text mb-b">{{ item.description }}</p>
-                      <div class="mb-s d-f-center-height">
-                        <span class="text-s text--light mr-m">
-                          <v-icon class="mr-s">fas fa-map-marker-alt</v-icon>{{ item.zone }}
+                      <div class="text-s text--light mb-s d-f-center-height">
+                        <span class="mr-m">
+                          <v-icon class="mr-s" title="地區">fas fa-map-marker-alt</v-icon>{{ item.zone }}
                         </span>
-                        <span class="text-s text--light mr-m" v-if="item.ticketInfo !== ''">
-                          <v-icon class="mr-s">fas fa-ticket-alt</v-icon>{{ item.ticketInfo }}
+                        <span class="mr-m" v-if="item.ticketInfo !== ''">
+                          <v-icon class="mr-s" title="購票資訊">fas fa-ticket-alt</v-icon>{{ item.ticketInfo }}
                         </span>
                         <v-chip small>{{ item.category }}</v-chip>
                       </div>
-                      <span class="text-s text--light card__text card__text--one">
-                        <v-icon class="mr-s">far fa-clock</v-icon>{{ item.openTime }}
-                      </span>
+                      <div class="text-s text--light card__text card__text--one">
+                        <v-icon class="mr-s" title="開放時間">far fa-clock</v-icon>{{ item.openTime }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -138,13 +137,14 @@
             </div>
             <div class="col-auto">
               <v-pagination
-                v-model="pageCurrent"
+                :value="pageCurrent"
                 :length="pageTotal"
                 :total-visible="7"
-                @input="handleChangePage()"
+                @input="handleChangePage($event)"
               ></v-pagination>
             </div>
           </div>
+          <div class="no-data" v-if="filterListTotal === 0">No Data Available</div>
         </div>
       </div>
     </div>
@@ -152,18 +152,12 @@
 </template>
 
 <script>
-import { slideToggle, isEmpty, scrollToTop } from '@/shared/util';
+import { slideToggle, isEmpty, scrollTo } from '@/shared/util';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'Home',
   directives: {
-    slideToggle: {
-      update(el, binding) {
-        if (binding.value === binding.oldValue) return;
-        slideToggle(el, 'is-active');
-      },
-    },
     // 使元素隨著資料而改變，當改變後執行 binding.value.fn
     watchData: {
       update(el, binding) {
@@ -172,9 +166,9 @@ export default {
       },
     },
   },
+
   data() {
     return {
-      pageCurrent: 1,
       numberPerPage: 10,
       filterType: null,
     };
@@ -189,6 +183,7 @@ export default {
       'checkboxItems',
       'checkboxValue',
       'loading',
+      'pageCurrent',
     ]),
 
     $_checkboxValue: {
@@ -223,14 +218,16 @@ export default {
           return false;
         }
 
-        if (!isEmpty(this.tagSelectors) &&
-            !this.tagSelectors.every(selector => item[selector.type] === selector.value)
+        if (
+          !isEmpty(this.tagSelectors)
+          && !this.tagSelectors.every(selector => item[selector.type] === selector.value)
         ) {
           return false;
         }
 
-        if (!isEmpty(this.checkboxValue) &&
-            !this.checkboxValue.every(name => item[this.checkboxItems[name]] === name)
+        if (
+          !isEmpty(this.checkboxValue)
+          && !this.checkboxValue.every(name => item[this.checkboxItems[name]] === name)
         ) {
           return false;
         }
@@ -248,18 +245,20 @@ export default {
 
   watch: {
     search() {
-      this.pageCurrent = 1;
+      this.setPageCurrent(1);
     },
     tagSelectors() {
-      this.pageCurrent = 1;
+      this.setPageCurrent(1);
     },
     checkboxValue() {
-      this.pageCurrent = 1;
+      this.setPageCurrent(1);
     },
   },
+
   methods: {
     ...mapMutations([
       'setCheckboxValue',
+      'setPageCurrent',
       'updateSelector',
     ]),
     ...mapActions([
@@ -273,8 +272,10 @@ export default {
       this.filterType = (this.filterType === n) ? null : n;
     },
 
-    handleChangePage() {
-      scrollToTop();
+    handleChangePage(page) {
+      if (this.pageCurrent === page) return;
+      this.setPageCurrent(page);
+      scrollTo('#content');
     },
 
     slideToggle(el) {

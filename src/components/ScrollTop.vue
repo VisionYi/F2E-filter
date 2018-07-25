@@ -93,7 +93,8 @@ export default {
     },
 
     mainStyle() {
-      if (this.stopPoint && (this.btnFixedTop + this.windowScrollTop) >= this.stopPoint) {
+      const btnOffsetTop = this.btnFixedTop + this.windowScrollTop;
+      if (this.stopPoint && btnOffsetTop >= this.stopPoint && btnOffsetTop >= this.startOffsetTop) {
         return {
           position: 'absolute',
           top: `${this.stopPoint}px`,

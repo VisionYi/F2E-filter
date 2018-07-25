@@ -1,21 +1,33 @@
 <template>
   <v-app id="app">
     <the-navbar></the-navbar>
-    <main>
-      <router-view/>
+    <main v-if="!loading">
+      <transition appear name="fade-in">
+        <router-view/>
+      </transition>
       <c-scroll-top
         :startOffsetTop="500"
         :stopBodyBottom="80"
       ></c-scroll-top>
     </main>
+    <div v-else class="bouncing-loader">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </v-app>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'App',
+  computed: {
+    ...mapGetters([
+      'loading',
+    ]),
+  },
 
   mounted() {
     this.initialData();
