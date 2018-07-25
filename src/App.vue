@@ -7,7 +7,7 @@
       </transition>
       <c-scroll-top
         :startOffsetTop="500"
-        :stopBodyBottom="80"
+        :stopBodyBottom="84"
       ></c-scroll-top>
     </main>
     <div v-else class="bouncing-loader">
@@ -42,5 +42,8 @@ export default {
 </script>
 
 <style lang="scss">
+main {
+  margin-bottom: $spacing-l;
+}
 
 </style>

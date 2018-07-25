@@ -204,6 +204,25 @@
   color: $color-text-light;
 }
 
+.author-footer {
+  margin: 1rem auto;
+  font-size: 0.875rem;
+  text-align: center;
+  color: #ccc;
+
+  &-pen {
+    margin-right: 0.25rem;
+  }
+  &-link {
+    color: #ccc;
+    margin-left: 0.25rem;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}
+
 // vue transform 動畫操作
 .zoom-enter-active, .zoom-leave-active {
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);

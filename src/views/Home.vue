@@ -1,5 +1,5 @@
 <template>
-  <div class="main container-fluid mb-m">
+  <div class="main container-fluid">
     <div class="grid no-gap mobile-1">
       <div class="col-auto">
         <aside class="filter">
@@ -57,9 +57,22 @@
             </div>
           </div>
         </aside>
+        <div class="author-footer hidden-mobile">
+          <div class="mb-s">
+            資料來源:
+            <a class="author-footer-link" href="https://data.kcg.gov.tw/dataset/attractions-information" target="_black">
+              高雄市政府 Open Data
+            </a>
+          </div>
+          <i class="fas fa-pen-square author-footer-pen" title="Author"></i>
+          - Created by Visionyi
+          <a class="author-footer-link" href="https://github.com/VisionYi/F2E-filter" target="_black" title="Source Code">
+            <i class="fas fa-code"></i>
+          </a>
+        </div>
       </div>
-      <div class="col flexible" id="content">
-        <div class="main__content">
+      <div class="col flexible">
+        <div class="main__content" id="content">
           <p class="text-l mb-s">
             共 <strong class="primary--text">{{ filterListTotal }}</strong> 筆搜尋結果...
           </p>
@@ -300,7 +313,7 @@ export default {
   }
 
   &__content {
-    margin: $spacing-l $spacing-xl 0 $spacing-xl;
+    padding: $spacing-l $spacing-xl 0 $spacing-xl;
   }
 
   &__tags {

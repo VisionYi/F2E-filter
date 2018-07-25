@@ -70,9 +70,9 @@ export default {
 <style lang="scss">
 .item-page {
   width: 100%;
-  max-width: 900px;
+  max-width: 57.5rem; // 920px
   margin: 0 auto;
-  padding: $spacing-l $spacing-xl $spacing-xl $spacing-xl;
+  padding: $spacing-l $spacing-xl 0 $spacing-xl;
 
   @include respond-to('mobile') {
     padding-left: 0;

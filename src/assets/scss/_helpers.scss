@@ -42,6 +42,7 @@
 }
 .d-f-center {
   display: flex !important;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -49,6 +50,7 @@
 }
 .d-f-center-height {
   display: flex !important;
+  flex-wrap: wrap;
   align-items: center;
   height: 100%;
 }
