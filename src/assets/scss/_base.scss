@@ -66,6 +66,16 @@
     }
   }
 
+  &__search {
+    background-color: lighten($color-bg-dark, 2);
+    padding: $spacing $spacing-xl;
+    border-bottom: 1px solid $color-bg-darker;
+
+    .v-input {
+      margin-top: 0;
+    }
+  }
+
   .v-input--selection-controls {
     margin: 0;
 

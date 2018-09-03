@@ -1,8 +1,21 @@
 <template>
   <div class="main container-fluid">
-    <div class="grid no-gap mobile-1">
+    <div class="grid no-gaps mobile-1">
       <div class="col-auto">
         <aside class="filter">
+          <div class="filter__search show-only-mobile">
+            <v-text-field
+              v-model="$_search"
+              label="search"
+              placeholder="search..."
+              color="black"
+              prepend-inner-icon="fas fa-search"
+              single-line
+              hide-details
+              clearable
+              @click:clear="setSearch('')"
+            ></v-text-field>
+          </div>
           <div
             v-for="selector in selectors"
             :key="selector.id"
@@ -114,7 +127,7 @@
                class="card card--pointer"
             >
               <router-link class="card__link-item" :to="routerLinkItem(item.id)">
-                <div class="grid no-gap tablet-1 mobile-1">
+                <div class="grid no-gaps tablet-1 mobile-1">
                   <div class="col-auto">
                     <figure class="card__figure card__figure--desktop-height">
                       <img :src="item.picture" alt="picture">
@@ -165,7 +178,7 @@
 </template>
 
 <script>
-import { slideToggle, isEmpty, scrollTo } from '@/shared/util';
+import { slideToggle, isEmpty, scrollTo, debounce } from '@/shared/util';
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
@@ -206,6 +219,15 @@ export default {
       set(value) {
         this.setCheckboxValue(value);
       },
+    },
+
+    $_search: {
+      get() {
+        return this.search;
+      },
+      set: debounce(function fn(value) {
+        this.setSearch(value);
+      }, 400),
     },
 
     filterListTotal() {
@@ -273,6 +295,7 @@ export default {
       'setCheckboxValue',
       'setPageCurrent',
       'updateSelector',
+      'setSearch',
     ]),
     ...mapActions([
       'closeTagSearch',

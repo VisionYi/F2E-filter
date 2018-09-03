@@ -1,13 +1,13 @@
 <template>
   <header class="navbar">
     <div class="container-fluid navbar__container">
-      <ul class="grid no-gap w-100">
-        <li class="col-auto flexible-mobile">
+      <ul class="grid no-gaps mobile-1 w-100">
+        <li class="col-auto">
           <h3 class="navbar__title">
             <a href="#/">高雄 Fun</a>
           </h3>
         </li>
-        <li v-if="$route.name === 'home'" class="col flexible hidden-mobile" >
+        <li v-if="$route.name === 'home'" class="col flexible hidden-mobile">
           <v-text-field
             v-model="$_search"
             label="search"
